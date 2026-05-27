@@ -147,6 +147,9 @@ def get_cfg() -> config.Config:
 def filter_request(request: SXNG_Request) -> werkzeug.Response | None:
     # pylint: disable=too-many-return-statements
 
+    if request.path == '/search':
+        return None
+
     cfg = get_cfg()
     real_ip = ip_address(request.remote_addr)
     network = get_network(real_ip, cfg)
@@ -187,23 +190,6 @@ def filter_request(request: SXNG_Request) -> werkzeug.Response | None:
         if val is not None:
             logger.debug(f"NOT OK ({func.__name__}): {network}: %s", dump_request(sxng_request))
             return val
-
-    # methods applied on /search requests
-
-    if request.path == '/search':
-
-        for func in [
-            http_accept,
-            http_accept_encoding,
-            http_accept_language,
-            http_user_agent,
-            http_sec_fetch,
-            ip_limit,
-        ]:
-            val = func.filter_request(network, request, cfg)
-            if val is not None:
-                logger.debug(f"NOT OK ({func.__name__}): {network}: %s", dump_request(sxng_request))
-                return val
 
     logger.debug(f"OK {network}: %s", dump_request(sxng_request))
     return None
