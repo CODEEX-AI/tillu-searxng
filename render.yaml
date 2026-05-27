@@ -14,15 +14,16 @@ services:
       - key: SEARXNG_BASE_URL
         fromContext: instance_url
       - key: SEARXNG_VALKEY_URL
-        value: valkey://valkey:6379/0
+        fromService:
+          type: keyvalue
+          name: cache
+          property: connectionString
       - key: SEARXNG_LIMITER
         value: "true"
 
-  - type: private
-    name: valkey
-    env: image
-    image: valkey/valkey:latest
+  - type: keyvalue
+    name: cache
     plan: free
-    envVars:
-      - key: VALKEY_PORT
-        value: 6379
+    ipAllowList:
+      - source: 0.0.0.0/0
+        description: internal
