@@ -209,15 +209,15 @@ def initialize(app: flask.Flask, settings):
     """Install the limiter"""
     global _INSTALLED  # pylint: disable=global-statement
 
+    if not (settings['server']['limiter'] or settings['server']['public_instance']):
+        return
+
     # even if the limiter is not activated, the botdetection must be activated
     # (e.g. the self_info plugin uses the botdetection to get client IP)
 
     cfg = get_cfg()
     valkey_client = valkeydb.client()
     botdetection.init(cfg, valkey_client)
-
-    if not (settings['server']['limiter'] or settings['server']['public_instance']):
-        return
 
     if not valkey_client:
         logger.error(
