@@ -12,7 +12,7 @@ services:
       - key: SEARXNG_PORT
         value: 8080
       - key: SEARXNG_BASE_URL
-        fromContext: instance_url
+        value: "https://your-app-url.onrender.com"
       - key: SEARXNG_VALKEY_URL
         fromService:
           type: keyvalue
