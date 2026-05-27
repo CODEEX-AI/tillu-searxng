@@ -1391,7 +1391,7 @@ def static_headers(headers: Headers, _path: str, _url: str) -> None:
         headers[header] = str(value)
 
 
-app.wsgi_app = ProxyFix(app.wsgi_app)
+# app.wsgi_app = ProxyFix(app.wsgi_app)
 app.wsgi_app = WhiteNoise(
     app.wsgi_app,
     root=settings['ui']['static_path'],

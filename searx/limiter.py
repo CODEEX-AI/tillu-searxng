@@ -217,7 +217,10 @@ def initialize(app: flask.Flask, settings):
 
     cfg = get_cfg()
     valkey_client = valkeydb.client()
-    botdetection.init(cfg, valkey_client)
+    try:
+        botdetection.init(cfg, valkey_client)
+    except Exception as e:
+        logger.debug("botdetection init skipped: %s", e)
 
     if not valkey_client:
         logger.error(
